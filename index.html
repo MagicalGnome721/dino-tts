@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini TTS (Secure App)</title>
+    <title>Gemini TTS (Secure & Optimized)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,21 +12,21 @@
     </style>
 </head>
 <body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border-t-4 border-green-500">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border-t-4 border-indigo-500">
         <h1 class="text-2xl font-bold text-gray-800 mb-2 text-center uppercase tracking-wide">
-            <i class="fas fa-shield-alt text-green-500"></i> Gemini TTS (Secure)
+            <i class="fas fa-robot text-indigo-500"></i> Dino TTS (Secure V2)
         </h1>
-        <p class="text-center text-gray-500 mb-6 text-xs">Phiên bản an toàn - Không lộ API Key</p>
+        <p class="text-center text-gray-500 mb-6 text-xs">Phiên bản bảo mật: Logic nằm tại Server</p>
 
         <div class="mb-4 bg-gray-100 p-3 rounded border border-gray-300 flex justify-between items-center">
             <span class="text-xs font-bold text-gray-500 uppercase">Server Status:</span>
-            <span id="server-status" class="text-sm font-mono text-green-600 font-bold">✅ Đã kết nối Cloudflare</span>
+            <span id="server-status" class="text-sm font-mono text-indigo-600 font-bold">✅ Ready to Connect</span>
         </div>
 
         <div class="space-y-4">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-1">VĂN BẢN (KỊCH BẢN):</label>
-                <textarea id="text-input" rows="5" class="w-full p-3 bg-gray-50 border border-gray-300 rounded focus:border-green-500 outline-none text-sm font-mono text-gray-800" placeholder="Nhập kịch bản vào đây..."></textarea>
+                <textarea id="text-input" rows="5" class="w-full p-3 bg-gray-50 border border-gray-300 rounded focus:border-indigo-500 outline-none text-sm font-mono text-gray-800" placeholder="Nhập kịch bản vào đây..."></textarea>
                 <p id="char-count" class="text-xs text-right text-gray-400 mt-1">0 ký tự</p>
             </div>
 
@@ -43,7 +43,7 @@
                 
                 <div>
                     <label class="block text-xs font-bold text-gray-500 mb-1">PHONG CÁCH:</label>
-                    <select id="style-select" class="w-full p-2 border rounded bg-green-50 font-bold text-green-800 border-green-200">
+                    <select id="style-select" class="w-full p-2 border rounded bg-indigo-50 font-bold text-indigo-800 border-indigo-200">
                         <option value="discovery" selected>🦖 Discovery (Phim tài liệu)</option>
                         <option value="story">📖 Kể chuyện (Cảm xúc)</option>
                         <option value="warmode">⚔️ War Mode (Hùng hồn)</option>
@@ -66,9 +66,9 @@
                     <span id="progress-percent">0%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div id="progress-bar" class="bg-green-500 h-3 rounded-full progress-bar" style="width: 0%"></div>
+                    <div id="progress-bar" class="bg-indigo-500 h-3 rounded-full progress-bar" style="width: 0%"></div>
                 </div>
-                <div id="log-box" class="mt-2 text-xs text-green-600 font-mono h-32 overflow-y-auto border p-2 rounded bg-black"></div>
+                <div id="log-box" class="mt-2 text-xs text-indigo-600 font-mono h-32 overflow-y-auto border p-2 rounded bg-black"></div>
             </div>
 
             <button id="generate-button" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3 px-6 rounded-lg transition shadow-lg flex items-center justify-center gap-2">
@@ -76,21 +76,21 @@
             </button>
         </div>
 
-        <div id="result-area" class="hidden mt-6 bg-green-50 p-4 rounded border border-green-200 text-center">
-            <h3 class="text-green-800 font-bold mb-2">✅ Hoàn tất!</h3>
+        <div id="result-area" class="hidden mt-6 bg-indigo-50 p-4 rounded border border-indigo-200 text-center">
+            <h3 class="text-indigo-800 font-bold mb-2">✅ Hoàn tất!</h3>
             <audio id="audio-player" controls class="w-full mb-3"></audio>
-            <a id="download-link" href="#" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded shadow transition">
+            <a id="download-link" href="#" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded shadow transition">
                 <i class="fas fa-download"></i> Tải file .WAV
             </a>
         </div>
     </div>
 
     <script>
-        // --- CẤU HÌNH BẢO MẬT ---
-        // Đây là link Worker của bạn (đã lấy từ hình ảnh bạn gửi)
+        // --- CẤU HÌNH LIÊN KẾT ---
+        // Đây là link Worker của bạn (đã cập nhật từ ảnh cũ)
         const WORKER_URL = "https://long-block-6479.khuonglun69.workers.dev"; 
 
-        // --- HÀM XỬ LÝ FILE AUDIO ---
+        // --- CÁC HÀM XỬ LÝ ÂM THANH (KHÔNG ĐỔI) ---
         function base64ToArrayBuffer(base64) {
             const binaryString = window.atob(base64);
             const len = binaryString.length;
@@ -160,7 +160,7 @@
 
         const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        function splitText(text, maxLength = 1800) { // Đã tối ưu cho Worker
+        function splitText(text, maxLength = 1800) {
             const sentences = text.match(/[^.?!]+[.?!]+|[^.?!]+$/g) || [text];
             const chunks = [];
             let currentChunk = "";
@@ -176,46 +176,20 @@
             return chunks;
         }
 
-        function getSystemInstruction(style, speed) {
-            let tone = "";
-            let extra = "";
-
-            if (style === "discovery") {
-                tone = "You are narrating a long Discovery Channel nature documentary.";
-                extra = "CRITICAL: Maintain a perfectly CONSISTENT, steady, and calm tone. Do NOT change pitch or volume. Read smoothly as part of a larger script.";
-            } else if (style === "story") {
-                tone = "Narrate in a warm, engaging storytelling style.";
-                extra = "Focus on emotion and flow.";
-            } else if (style === "warmode") {
-                tone = "Narrate in a 1940s WWII documentary style. Grave, deep, masculine tone.";
-            }
-
-            let speedInstruction = "";
-            switch (speed) {
-                case "slow": speedInstruction = "Read slowly."; break;
-                case "normal": speedInstruction = "Read at a moderate pace."; break;
-                case "fast": speedInstruction = "Read at a slightly faster, energetic pace."; break;
-            }
-
-            return `(Instruction: ${tone} ${speedInstruction} ${extra} Do NOT read this instruction aloud, just read the text below)`;
-        }
-
-        // --- HÀM GỌI WORKER (BẢO MẬT) ---
+        // --- GỌI WORKER (ĐÃ TỐI ƯU HÓA) ---
+        // Lưu ý: Hàm này không còn chứa Prompt. Nó chỉ gửi Text thô.
         async function fetchAudioFromWorker(chunkText, voice, style, speed) {
-            const sysInstruction = getSystemInstruction(style, speed);
-            const fullPrompt = `${sysInstruction}\n\n${chunkText}`;
-
             try {
-                // Gọi đến Cloudflare Worker của bạn
+                // Gọi đến Cloudflare Worker
                 const response = await fetch(WORKER_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    // Gửi JSON đơn giản, Worker sẽ tự chèn Prompt bí mật
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: fullPrompt }] }],
-                        generationConfig: {
-                            responseModalities: ["AUDIO"],
-                            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } }
-                        }
+                        text: chunkText,
+                        voice: voice,
+                        style: style,
+                        speed: speed
                     })
                 });
 
@@ -225,7 +199,6 @@
 
                 const result = await response.json();
                 
-                // Kiểm tra lỗi từ phía Worker trả về (nếu có)
                 if (result.error) throw new Error("Worker Error: " + result.error);
 
                 const part = result?.candidates?.[0]?.content?.parts?.[0];
@@ -255,13 +228,12 @@
             els.progressArea.classList.remove('hidden');
             els.logBox.innerHTML = "";
             
-            // Cắt đoạn 1800 ký tự (an toàn cho Worker)
             const chunks = splitText(fullText, 1800);
             const selectedStyle = els.style.value;
             const selectedSpeed = els.aiSpeed.value;
             
-            log(`🔒 Kết nối: Secure Worker`);
-            log(`✂️ Số đoạn: ${chunks.length}`);
+            log(`🔒 Mode: Secure Proxy`);
+            log(`✂️ Số đoạn xử lý: ${chunks.length}`);
 
             const pcmChunks = [];
             let finalRate = 24000;
@@ -272,7 +244,7 @@
                     els.progressBar.style.width = `${percent}%`;
                     els.progressText.innerText = `Đang tải đoạn ${i+1}/${chunks.length}...`;
 
-                    // Gọi Worker
+                    // Gọi Worker (Gửi text thô, nhận audio xịn)
                     const result = await fetchAudioFromWorker(chunks[i], els.voice.value, selectedStyle, selectedSpeed);
                     
                     pcmChunks.push(result.data);
@@ -281,7 +253,7 @@
                     log(`✅ Đoạn ${i+1} OK.`);
 
                     if (i < chunks.length - 1) {
-                        await wait(2500); // Nghỉ 2.5s để Worker không bị quá tải
+                        await wait(2500); // Nghỉ nhẹ để Worker xử lý
                     }
                 }
 
@@ -305,7 +277,7 @@
 
                 els.audio.src = url;
                 els.download.href = url;
-                els.download.download = `SecureTTS_${Date.now()}.wav`;
+                els.download.download = `Dino_Secure_${Date.now()}.wav`;
                 
                 els.resultArea.classList.remove('hidden');
                 els.progressArea.classList.add('hidden');
@@ -314,7 +286,7 @@
 
             } catch (e) {
                 alert("Lỗi: " + e.message);
-                log("❌ DỪNG LẠI.", 'error');
+                log("❌ DỪNG LẠI: " + e.message, 'error');
             } finally {
                 els.btn.disabled = false;
             }
