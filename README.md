@@ -1,93 +1,100 @@
-# 🦖 Dino TTS - Secure AI Voice Generator
+🦖 Dino TTS - Secure AI Voice Generator
 
-**Dino TTS** is a secure, serverless Text-to-Speech (TTS) web application powered by **Google Gemini 2.5 Flash**.
+Dino TTS is a secure, serverless Text-to-Speech (TTS) web application powered by Google Gemini 2.5 Flash.
 
-Unlike typical client-side wrappers, this project implements a **Backend-for-Frontend (BFF)** pattern using **Cloudflare Workers**. This architecture ensures that sensitive API keys and proprietary system prompts are never exposed to the browser, making the application production-ready and secure against unauthorized usage.
+Unlike typical client-side wrappers, this project implements a Backend-for-Frontend (BFF) pattern using Cloudflare Workers. This architecture ensures that sensitive API keys and proprietary system prompts are never exposed to the browser, making the application production-ready and secure against unauthorized usage.
 
-🔗 **Live Demo:** [https://magicalgnome721.github.io/dino-tts/](https://magicalgnome721.github.io/dino-tts/)
+🔗 Live Demo: https://magicalgnome721.github.io/dino-tts/
 
----
+🚀 Key Features
 
-## 🚀 Key Features
+High-Fidelity AI Voices: Generates realistic speech using Gemini's advanced multi-modal capabilities.
 
-* **High-Fidelity AI Voices:** Generates realistic speech using Gemini's advanced multi-modal capabilities.
-* **Secure Serverless Proxy:** Uses Cloudflare Workers to act as an intermediary, hiding API keys and enforcing strict CORS policies.
-* **Hidden Prompt Engineering:** System instructions (e.g., "Discovery Channel" narration style) are injected server-side, preventing prompt leakage.
-* **Smart Text Chunking:** Includes a custom algorithm to split long scripts (>2000 chars) into logical segments, ensuring stability and preventing API timeouts.
-* **Load Balancing:** Implements logic to rotate through multiple API keys to handle rate limiting effectively.
-* **Multi-Style Support:** Offers distinct narration styles including *Discovery (Documentary)*, *Storytelling*, and *War Mode*.
+Secure Serverless Proxy: Uses Cloudflare Workers to act as an intermediary, hiding API keys and enforcing strict CORS policies.
 
-## 🛠️ Tech Stack
+Hidden Prompt Engineering: System instructions (e.g., "Discovery Channel" narration style) are injected server-side, preventing prompt leakage.
 
-* **Frontend:** HTML5, Tailwind CSS, Vanilla JavaScript.
-* **Backend / Edge:** Cloudflare Workers (Serverless).
-* **AI Model:** Google Gemini 2.5 Flash (via REST API).
-* **Hosting:** GitHub Pages (Frontend), Cloudflare Edge Network (Backend).
+Smart Text Chunking: Includes a custom algorithm to split long scripts (>2000 chars) into logical segments.
 
-## 🏗️ System Architecture
+Load Balancing: Rotates through multiple API keys to handle quota.
 
-To prevent API Key theft and usage quota abuse, this app does **not** make direct calls to Google from the client.
+Multi-Style Support: Documentary, Storytelling, War Mode.
 
-```mermaid
+🛠️ Tech Stack
+
+Frontend: HTML5, Tailwind, Vanilla JS
+
+Backend: Cloudflare Workers
+
+Model: Gemini 2.5 Flash
+
+Hosting: GitHub Pages + Cloudflare Edge
+
+🏗️ System Architecture
+
+To prevent API Key theft and usage quota abuse, this app does not make direct calls to Google from the client.
+
 graph LR
-    User["User / Browser"] -- "1. Send Text + Style" --> Worker["Cloudflare Worker (Secure Proxy)"]
+    %% User sends text request
+    User["🧑‍💻 User / Browser"] -- "1️⃣ Send Text + Style" --> Worker["🛡️ Cloudflare Worker (Secure Proxy)"]
 
-    subgraph Secure Backend
-        Worker -- "2. Auth Check (CORS)" --> Auth{"Valid Origin?"}
-        Auth -- Yes --> Logic["3. Inject Hidden Prompt & Select API Key"]
-        Logic -- "4. Request Audio" --> Gemini["Google Gemini API"]
+    %% Secure backend logic
+    subgraph Secure Backend 🔒
+        Worker -- "2️⃣ Auth Check (CORS)" --> Auth{"Valid Origin?"}
+        Auth -- "✔️ Yes" --> Logic["3️⃣ Inject Hidden Prompt & Select API Key"]
+        Auth -- "❌ No" --> Block["Reject Request 🚫"]
+        Logic -- "4️⃣ Request Audio" --> Gemini["🤖 Google Gemini API"]
     end
 
-    Gemini -- "5. Return Audio Blob" --> Worker
-    Worker -- "6. Return WAV to Client" --> User
+    %% Return path
+    Gemini -- "5️⃣ Return Audio Blob" --> Worker
+    Worker -- "6️⃣ Return WAV to Client" --> User
 
+🧩 Flow Explanation (Plain English)
 
-Client: Sends only the raw text and selected style/voice to the Cloudflare Worker.
+Client:
+Sends raw text + selected voice/style → Worker.
 
 Worker:
+• Validates origin (magicalgnome721.github.io)
+• Selects an API key from encrypted vars
+• Injects the hidden narration prompt
+• Sends request to Google
 
-Validates the request origin (must be magicalgnome721.github.io).
+Google:
+Returns audio binary.
 
-Selects an active API Key from encrypted environment variables.
-
-Injects the proprietary system prompt (e.g., "Narrate in a calm, documentary tone...").
-
-Forwards the request to Google's servers.
-
-Google: Generates the audio and returns it to the Worker.
-
-Worker: Relays the safe audio binary back to the user.
+Worker:
+Returns WAV back to client — safe, no key exposure.
 
 🛡️ Security Implementation
-This project addresses common security pitfalls in frontend AI apps:
 
-No Hardcoded Keys: Source code contains zero API credentials. Keys are stored in Cloudflare's Encrypted Environment Variables.
+No Hardcoded Keys:
+Keys stored in Cloudflare Encrypted Vars.
 
-Origin Validation: The backend uses Access-Control-Allow-Origin to strictly allow requests only from the production domain, blocking local execution or unauthorized cloning.
+Strict CORS Validation:
+Only the production domain can access the Worker.
 
-Prompt Protection: The specific "Discovery" narration prompt is stored on the server, protecting the intellectual property of the prompt engineering.
+Protected Prompt Engineering:
+Narration instructions never leave the server.
 
-⚙️ Local Development (For Reviewers)
-Since the backend is deployed on Cloudflare, you can run the frontend locally, but it will only work if you update the WORKER_URL or set up your own worker.
+⚙️ Local Development
 
-Clone the repo:
+You can run the frontend locally, but the Worker will reject localhost unless you modify CORS.
 
-Bash
+Clone the repo
+git clone https://github.com/MagicalGnome721/dino-tts.git
 
-git clone [https://github.com/MagicalGnome721/dino-tts.git](https://github.com/MagicalGnome721/dino-tts.git)
+
 Open index.html in your browser.
 
-Note: The production Worker will reject requests from localhost due to CORS policy. To test fully, please visit the Live Demo.
+Full functionality requires your own Worker endpoint.
 
 👨‍💻 Author
+
 Nguyen An Khuong
-
-Role: AI Engineer / Data Analyst
-
-Focus: Building scalable AI solutions & Automation pipelines.
+AI Engineer / Data Analyst
+Building scalable AI + automation systems.
 
 LinkedIn
-
-GitHub Profile
-
-Created as a portfolio project to demonstrate secure AI integration patterns.
+GitHub
