@@ -28,16 +28,18 @@ Unlike typical client-side wrappers, this project implements a **Backend-for-Fro
 
 To prevent API Key theft and usage quota abuse, this app does **not** make direct calls to Google from the client.
 
-```mermaid
 graph LR
     User["User / Browser"] -- "1. Send Text + Style" --> Worker["Cloudflare Worker (Secure Proxy)"]
+
     subgraph Secure Backend
         Worker -- "2. Auth Check (CORS)" --> Auth{"Valid Origin?"}
         Auth -- Yes --> Logic["3. Inject Hidden Prompt & Select API Key"]
         Logic -- "4. Request Audio" --> Gemini["Google Gemini API"]
     end
+
     Gemini -- "5. Return Audio Blob" --> Worker
     Worker -- "6. Return WAV to Client" --> User
+
 
 Client: Sends only the raw text and selected style/voice to the Cloudflare Worker.
 
