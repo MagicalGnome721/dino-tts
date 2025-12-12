@@ -38,6 +38,7 @@ graph LR
     end
     Gemini -- "5. Return Audio Blob" --> Worker
     Worker -- "6. Return WAV to Client" --> User
+
 Client: Sends only the raw text and selected style/voice to the Cloudflare Worker.
 
 Worker:
