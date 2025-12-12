@@ -30,11 +30,11 @@ To prevent API Key theft and usage quota abuse, this app does **not** make direc
 
 ```mermaid
 graph LR
-    User[User / Browser] -- "1. Send Text + Style" --> Worker[Cloudflare Worker (Secure Proxy)]
+    User["User / Browser"] -- "1. Send Text + Style" --> Worker["Cloudflare Worker (Secure Proxy)"]
     subgraph Secure Backend
-        Worker -- "2. Auth Check (CORS)" --> Auth{Valid Origin?}
-        Auth -- Yes --> Logic[3. Inject Hidden Prompt & Select API Key]
-        Logic -- "4. Request Audio" --> Gemini[Google Gemini API]
+        Worker -- "2. Auth Check (CORS)" --> Auth{"Valid Origin?"}
+        Auth -- Yes --> Logic["3. Inject Hidden Prompt & Select API Key"]
+        Logic -- "4. Request Audio" --> Gemini["Google Gemini API"]
     end
     Gemini -- "5. Return Audio Blob" --> Worker
     Worker -- "6. Return WAV to Client" --> User
@@ -87,11 +87,3 @@ LinkedIn
 GitHub Profile
 
 Created as a portfolio project to demonstrate secure AI integration patterns.
-
-
-### Tại sao file README này "chất"?
-1.  **Sơ đồ Mermaid:** Phần `graph LR` sẽ tự động hiển thị thành một biểu đồ luồng dữ liệu (Flowchart) rất đẹp trên GitHub. Điều này chứng minh bạn có tư duy hệ thống (System Thinking).
-2.  **Nhấn mạnh vào "Hidden Prompt":** Đây là chi tiết ăn tiền bạn vừa làm (giấu prompt ở server). Nó cho thấy bạn hiểu về bảo vệ tài sản trí tuệ (IP) khi làm AI.
-3.  **Bố cục chuẩn:** Có demo, có công nghệ, có kiến trúc, có bảo mật.
-
-Bạn dán vào đi, nhìn cái repo GitHub sẽ sáng sủa hơn hẳn đấy!
