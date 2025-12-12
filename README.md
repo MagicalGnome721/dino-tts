@@ -28,6 +28,7 @@ Unlike typical client-side wrappers, this project implements a **Backend-for-Fro
 
 To prevent API Key theft and usage quota abuse, this app does **not** make direct calls to Google from the client.
 
+```mermaid
 graph LR
     User["User / Browser"] -- "1. Send Text + Style" --> Worker["Cloudflare Worker (Secure Proxy)"]
 
